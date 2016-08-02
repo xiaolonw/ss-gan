@@ -229,7 +229,7 @@ function dataset:get(i1, i2)
       -- load the sample
       local imgpath = ffi.string(torch.data(self.imagePath[indices[i]]))
       local lblpath = ffi.string(torch.data(self.labelPath[indices[i]]))
-      local img, lbl = self:sampleHookTest(imgpath, lblpath)
+      local img, lbl = self:sampleHookTrain(imgpath, lblpath)
       table.insert(dataTable, img)
       table.insert(labelTable, lbl)
    end
