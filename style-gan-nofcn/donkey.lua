@@ -57,11 +57,32 @@ local function loadLabel_high(path)
    return input
 end
 
+
+local savepath = '/nfs.yoda/xiaolonw/torch_projects/t_imgs/'
+function saveData(img, imgname)
+  img = (img + 1 ) * 127.5
+  img = img:byte()
+  image.save(imgname, img )
+end
+
+
 function makeData(fine, label)
    local class = 0
    local sample_norm = torch.norm(label, 2, 2)
    sample_norm = torch.cat({sample_norm, sample_norm, sample_norm}, 2)
    label = torch.cdiv(label, sample_norm)
+
+
+   if opt.flag == 0 then 
+    for i = 1, opt.batchSize do 
+      local label_name = paths.concat(savepath, string.format('%04d_label.jpg',i ))
+      local img_name = paths.concat(savepath, string.format('%04d_img.jpg',i ))
+      saveData(label[i]:clone(), label_name)
+      saveData(fine[i]:clone(), img_name)
+    end
+   end
+   opt.flag = 1
+
    
    return {fine, class ,label}
 end
@@ -78,9 +99,8 @@ sub_num = -1
 -- function to load the image, jitter it appropriately (random crops etc.)
 local trainHook = function(self, imgpath, lblpath)
    collectgarbage()
-   -- local img = loadImage(imgpath)
-   local label = loadLabel_high(lblpath)
    local img = loadImage(imgpath)
+   local label = loadLabel_high(lblpath)
 
    img:div(div_num)
    img:add(sub_num)
