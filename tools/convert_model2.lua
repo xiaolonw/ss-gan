@@ -14,8 +14,8 @@ savefile = '/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/bactch60
 tmp = torch.load(network)
 model_D = tmp.D
 model_G = tmp.G
-model_FCN = tmp.FCN 
+-- model_FCN = tmp.FCN 
 
-torch.save(savefile, {D = model_D:clearState(), G = model_G:clearState(), FCN = model_FCN:clearState()})
+torch.save(savefile, {D = model_D:clearState(), G = model_G:clearState()})
 
 
