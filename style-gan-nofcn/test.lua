@@ -31,7 +31,6 @@ opt = lapp[[
 
 if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
 print(opt)
-opt.flag = 0
 
 -- fix seed
 torch.manualSeed(torch.random(1,10000))

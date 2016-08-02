@@ -40,6 +40,7 @@ if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
 -- opt.network = '/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/save3/adversarial_6.net'
 
 print(opt)
+opt.flag = 0
 
 opt.loadSize  = opt.scale 
 
