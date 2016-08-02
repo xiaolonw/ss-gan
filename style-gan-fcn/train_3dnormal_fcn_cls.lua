@@ -194,10 +194,6 @@ local function train()
 
 end
 
-local filezero = paths.concat(opt.save, string.format('fcn_zero.net'))
-torch.save(filezero, { FCN = sanitize(model_FCN), opt = opt})
-
-
 epoch = 1
 -- training loop
 while true do
