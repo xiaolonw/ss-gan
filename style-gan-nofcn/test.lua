@@ -77,7 +77,7 @@ function getSamples(dataset, N, beg)
   gt_inputs:copy(batch_data[1])
   cond_inputs:copy(batch_data[3])
 
-  local samples = model_G:forward({noise_inputs, cond_inputs})
+  local samples = model_G:forward({noise_inputs:cuda(), cond_inputs:cuda()})
 
   for i=1,N do
 
