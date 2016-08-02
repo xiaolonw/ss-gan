@@ -123,20 +123,18 @@ if opt.network == '' then
   dh6 = nn.SpatialConvolution(256, 1024, 6, 6, 1, 1, 1, 1)(dp5)
   db6 = nn.SpatialBatchNormalization(1024)(dh6)
   dr6 = nn.ReLU(true)(db6)
-  -- dp6 = nn.Dropout()(dr6)
 
   dh7 = nn.SpatialFullConvolution(1024, 512, 4, 4, 2, 2, 1, 1)(dr6) 
   db7 = nn.SpatialBatchNormalization(512)(dh7)
   dr7 = nn.ReLU(true)(db7)
-  -- dp7 = nn.Dropout()(dr7)
 
   dh8 = nn.SpatialConvolution(512, opt.classnum, 3, 3, 1, 1, 1, 1)(dr7) 
-  -- dr8 = nn.LeakyReLU(0.2, true)(dh8)
-  -- dout = nn.SpatialUpSamplingNearest(8)(dr8)
-  -- dh9 = nn.SpatialFullConvolution(3, 3, 16, 16, 8, 8, 8, 8)(dr8) 
 
-  rea = nn.ReArrange()(dh8)
-  dout = nn.LogSoftMax()(rea)
+  -- rea = nn.ReArrange()(dh8)
+
+  shff  = nn.Transpose({2,3},{3,4})(dh8)
+  rshp  = nn.View(-1, 3)(shff)
+  dout  = nn.LogSoftMax()(rshp)
 
   model_FCN = nn.gModule({dx_I}, {dout})
 

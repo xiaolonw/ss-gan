@@ -68,10 +68,9 @@ end
 
 function makeData(fine, label)
    local class = 0
-   local sample_norm = torch.norm(label, 2, 2)
-   sample_norm = torch.cat({sample_norm, sample_norm, sample_norm}, 2)
-   label = torch.cdiv(label, sample_norm)
-
+   -- local sample_norm = torch.norm(label, 2, 2)
+   -- sample_norm = torch.cat({sample_norm, sample_norm, sample_norm}, 2)
+   -- label = torch.cdiv(label, sample_norm)
 
    if opt.flag == 0 then 
     for i = 1, opt.batchSize do 

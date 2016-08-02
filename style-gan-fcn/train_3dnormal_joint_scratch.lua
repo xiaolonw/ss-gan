@@ -257,9 +257,10 @@ if opt.network == '' then
   -- dp7 = nn.Dropout()(dr7)
 
   fdh8 = nn.SpatialConvolution(512, opt.classnum, 3, 3, 1, 1, 1, 1)(fdr7) 
-
-  frea = nn.ReArrange()(fdh8)
-  fdout = nn.LogSoftMax()(frea)
+  
+  shff  = nn.Transpose({2,3},{3,4})(fdh8)
+  frshp  = nn.View(-1, 3)(shff)
+  fdout = nn.LogSoftMax()(frshp)
 
   model_FCN = nn.gModule({fdx_I}, {fdout})
 
