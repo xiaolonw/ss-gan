@@ -47,7 +47,7 @@ else
   torch.setdefaulttensortype('torch.FloatTensor')
 end
 
-model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/bactch60/adversarial_27.net') 
+model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/bactch60/Style_GAN_nofcn.net') 
 model_G = model.G
 model_G = model_G:cuda()
 

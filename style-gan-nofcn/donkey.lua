@@ -79,9 +79,8 @@ sub_num = -1
 local trainHook = function(self, imgpath, lblpath)
    collectgarbage()
    -- local img = loadImage(imgpath)
-   local label 
-   label = loadLabel_high(lblpath)
-   local img = label:clone() 
+   local label = loadLabel_high(lblpath)
+   local img = loadImage(imgpath)
 
    img:div(div_num)
    img:add(sub_num)
