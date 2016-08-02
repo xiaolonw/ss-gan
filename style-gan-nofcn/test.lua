@@ -27,7 +27,7 @@ opt = lapp[[
   -w, --window       (default 3)           windsow id of sample image
   --hidden_G         (default 8000)        number of units in hidden layers of G
   --hidden_D         (default 1600)        number of units in hidden layers of D
-  --scale            (default 72)          scale of images to train on
+  --scale            (default 128)          scale of images to train on
 ]]
 
 if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
@@ -35,8 +35,6 @@ print(opt)
 
 -- fix seed
 torch.manualSeed(torch.random(1,10000))
-
--- torch.manualSeed(1)
 
 -- threads
 torch.setnumthreads(opt.threads)
@@ -50,22 +48,23 @@ else
   torch.setdefaulttensortype('torch.FloatTensor')
 end
 
-model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72/save2/Structure_GAN.net') 
+model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/bactch60/adversarial_27.net') 
 model_G = model.G
 model_G = model_G:cuda()
 
 opt.noiseDim = {100, 1, 1}
 opt.geometry = {3, opt.scale, opt.scale}
 opt.condDim = {3, opt.scale, opt.scale}
-
 opt.div_num = 127.5
-opt.finescale = opt.scale * 2
+
+paths.dofile('donkey.lua')
+
 
 
 -- Get examples to plot
 function getSamples(dataset, N, beg)
 
-  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/test_structure_gan/' 
+  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/test_style_gan/' 
   local N = N or 8
   local noise_inputs = torch.Tensor(N, opt.noiseDim[1], opt.noiseDim[2], opt.noiseDim[3])
   local cond_inputs = torch.Tensor(N, opt.condDim[1], opt.condDim[2], opt.condDim[3])
@@ -73,23 +72,35 @@ function getSamples(dataset, N, beg)
 
   -- Generate samples
   noise_inputs:uniform(-1, 1)
+  batch_data = makeData(trainLoader:get(beg + 1, beg + N))
 
-  local samples = model_G:forward(noise_inputs)
-  sample_norm = torch.norm(samples, 2, 2)
-  sample_norm = torch.cat({sample_norm, sample_norm, sample_norm}, 2)
-  samples = torch.cdiv(samples, sample_norm)
+  gt_inputs:copy(batch_data[1])
+  cond_inputs:copy(batch_data[3])
 
-  -- local to_plot = torch.FloatTensor(3, opt.scale * 10,opt.scale * 30)
+  local samples = model_G:forward({noise_inputs, cond_inputs})
+
   for i=1,N do
-      output_name = paths.concat(resultpath, string.format('img_%04d.jpg',i + beg))
+
+      output_name = paths.concat(resultpath, string.format('%04d_pred.jpg',i + beg))
+      norm_name = paths.concat(resultpath, string.format('%04d_norm.jpg',i + beg))
+      gt_name = paths.concat(resultpath, string.format('%04d_ori.jpg',i + beg))
 
       samples[i] = (samples[i] + 1 ) * opt.div_num
+      cond_inputs[i] = (cond_inputs[i] + 1 ) * opt.div_num
+      gt_inputs[i] = (gt_inputs[i] + 1 ) * opt.div_num
 
       output_img = samples[i]:clone()
+      norm_img = cond_inputs[i]:clone()
+      gt_img = gt_inputs[i]:clone()
+
       output_img = output_img:byte():clone()
+      norm_img = norm_img:byte():clone()
+      gt_img = gt_img:byte():clone()
+
       image.save(output_name, output_img )
-      -- image.save(norm_name, norm_img)
-      -- image.save(gt_name, gt_img)
+      image.save(norm_name, norm_img)
+      image.save(gt_name, gt_img)
+
 
   end
 

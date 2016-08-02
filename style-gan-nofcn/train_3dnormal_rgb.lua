@@ -11,33 +11,37 @@ ok, disp = pcall(require, 'display')
 if not ok then print('display not found. unable to plot') end
 
 
+local sanitize = require('sanitize')
+
+
 ----------------------------------------------------------------------
 -- parse command-line options
 opt = lapp[[
-  -s,--save          (default "/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72")      subdirectory to save logs
+  -s,--save          (default "/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb")      subdirectory to save logs
   --saveFreq         (default 3)          save every saveFreq epochs
   -n,--network       (default "")          reload pretrained network
   -p,--plot                                plot while training
   -r,--learningRate  (default 0.0002)      learning rate
-  -b,--batchSize     (default 64)         batch size
+  -b,--batchSize     (default 80)         batch size
   -m,--momentum      (default 0.5)         momentum term of adam
   --coefL1           (default 0)           L1 penalty on the weights
-  --coefL2           (default 0)     L2 penalty on the weights
+  --coefL2           (default 0.00001)     L2 penalty on the weights
   -t,--threads       (default 2)           number of threads
   -g,--gpu           (default 0)          gpu to run on (default cpu)
   -d,--noiseDim      (default 100)         dimensionality of noise vector
   --K                (default 1)           number of iterations to optimize D for
   -w, --window       (default 3)           windsow id of sample image
-  --scale            (default 72)          scale of images to train on
+  --scale            (default 128)          scale of images to train on
   --epochSize        (default 2000)        number of samples per epoch
   --scratch          (default 0)
   --forceDonkeys     (default 0)
   --nDonkeys         (default 2)           number of data loading threads
-  --high             (default 1)           high resolution 
+  --classnum         (default 31)          number of classnum
 ]]
 
 if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
--- opt.network = '/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72/save/adversarial_24.net'
+-- opt.network = '/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/save3/adversarial_6.net'
+
 print(opt)
 
 opt.loadSize  = opt.scale 
@@ -64,14 +68,10 @@ end
 classes = {'0','1'}
 -- opt.noiseDim = {1, opt.scale / 4, opt.scale / 4}
 opt.geometry = {3, opt.scale, opt.scale}
--- opt.condDim = {3, opt.scale, opt.scale}
+opt.condDim = {3, opt.scale, opt.scale}
 
-function setWeights(weights, mu, std)
-  -- weights:randn(weights:size())
-  -- weights:mul(std)
-  weights:uniform(-std, std )
-  weights:add(mu)
-end
+
+
 
 local function weights_init(m)
    local name = torch.type(m)
@@ -94,13 +94,15 @@ if opt.network == '' then
   -- (5-5-3-3-3)
 
   local nplanes = 64
-  local inputsize = 72
+  local inputsize = 128
   dx_I = nn.Identity()()
-  dh1 = nn.SpatialConvolution(3, nplanes, 5, 5, 2, 2, 2, 2)(dx_I)  -- size / 2 
+  dx_C = nn.Identity()()
+  dc1 = nn.JoinTable(2, 2)({dx_I, dx_C})
+  dh1 = nn.SpatialConvolution(3 + 3, nplanes, 5, 5, 2, 2, 2, 2)(dc1)  -- size / 2 
   -- db1 = nn.SpatialBatchNormalization(nplanes)(dh1)
   dr1 = nn.LeakyReLU(0.2, true)(dh1)
 
-  dh2 = nn.SpatialConvolution(nplanes, nplanes * 2, 5, 5, 1, 1, 2, 2)(dr1)
+  dh2 = nn.SpatialConvolution(nplanes, nplanes * 2, 5, 5, 2, 2, 2, 2)(dr1) -- size / 2 
   -- db2 = nn.SpatialBatchNormalization(nplanes * 2)(dh2)
   dr2 = nn.LeakyReLU(0.2, true)(dh2)
 
@@ -118,42 +120,51 @@ if opt.network == '' then
   -- db5 = nn.SpatialBatchNormalization(nplanes * 2)(dh5)
   dr5 = nn.LeakyReLU(0.2, true)(dh5)
 
-  local outputsize3 =  nplanes * 2 * (inputsize / 8) * (inputsize / 8) 
+  local outputsize3 =  nplanes * 2 * (inputsize / 16) * (inputsize / 16) 
   rshp = nn.Reshape(outputsize3)(dr5)
   dh6 = nn.Linear(outputsize3, 1)(nn.Dropout()(rshp))
   dout = nn.Sigmoid()(dh6)
-  model_D = nn.gModule({dx_I}, {dout})
+  model_D = nn.gModule({dx_I, dx_C}, {dout})
 
   model_D:apply(weights_init)
 
   
+
   ----------------------------------------------------------------------
   -- define G network to train
   -- my G network
   local nplanes = 64
   x_I = nn.Identity()()  -- 1 channel noise
+  x_C = nn.Identity()()  -- 3 channel surface normal 
+  h1 = nn.SpatialConvolution(3, nplanes, 5, 5, 2, 2, 2, 2)(x_C)  -- size / 2
+  b1 = nn.SpatialBatchNormalization(nplanes)(h1) 
+  r1 = nn.ReLU(true)(b1) 
 
-
+  h2 = nn.SpatialConvolution( nplanes, nplanes * 2, 5, 5, 2, 2, 2, 2)(r1) -- size / 2  32 * 32
+  b2 = nn.SpatialBatchNormalization(nplanes * 2)(h2) 
+  r2 = nn.ReLU(true)(b2)
   
-  -- hi1 = nn.Linear(opt.noiseDim, nplanes*9*9)(x_I) -- the same size for noise 9 * 9
-  -- rshpi1 = nn.Reshape(nplanes,9,9)(hi1)
-  hi1 = nn.SpatialFullConvolution(opt.noiseDim, nplanes * 2, 9, 9)(x_I) 
-  bi1 = nn.SpatialBatchNormalization(nplanes * 2)(hi1)
+  hi1 = nn.SpatialFullConvolution(opt.noiseDim, nplanes , 8, 8)(x_I) 
+  bi1 = nn.SpatialBatchNormalization(nplanes)(hi1)
   ri1 = nn.ReLU(true)(bi1)
 
-  hi2 = nn.SpatialFullConvolution(nplanes * 2, nplanes * 2 , 4, 4, 2, 2, 1, 1)(ri1) -- size * 2 for noise 18 * 18 
-  bi2 = nn.SpatialBatchNormalization(nplanes * 2)(hi2)
+
+  hi2 = nn.SpatialFullConvolution(nplanes, nplanes , 4, 4, 2, 2, 1, 1)(ri1) -- size * 2 for noise 16 * 16 
+  bi2 = nn.SpatialBatchNormalization(nplanes)(hi2)
   ri2 = nn.ReLU(true)(bi2)
 
-  hi3 = nn.SpatialConvolution(nplanes  * 2 , nplanes  * 2, 3, 3, 1, 1, 1, 1)(ri2) -- the same size for noise 36 * 36 
-  bi3 = nn.SpatialBatchNormalization(nplanes * 2)(hi3)
+  hi3 = nn.SpatialFullConvolution(nplanes , nplanes , 4, 4, 2, 2, 1, 1)(ri2) -- size * 2 for noise 32 * 32 
+  bi3 = nn.SpatialBatchNormalization(nplanes)(hi3)
   ri3 = nn.ReLU(true)(bi3)
 
-  h3 = nn.SpatialConvolution(nplanes * 2, nplanes * 4, 3, 3, 1, 1, 1, 1)(ri3) -- the same size
+
+  c2 = nn.JoinTable(2, 2)({r2, ri3 })  -- merge 
+
+  h3 = nn.SpatialConvolution(nplanes*2 + nplanes , nplanes * 4, 3, 3, 1, 1, 1, 1)(c2) -- the same size
   b3 = nn.SpatialBatchNormalization(nplanes * 4)(h3) 
   r3 = nn.ReLU(true)(b3)
 
-  h4 = nn.SpatialConvolution(nplanes*4, nplanes * 8, 3, 3, 1, 1, 1, 1)(r3) -- the same size
+  h4 = nn.SpatialConvolution(nplanes*4, nplanes * 8, 3, 3, 2, 2, 1, 1)(r3) -- size / 2 
   b4 = nn.SpatialBatchNormalization(nplanes * 8)(h4) 
   r4 = nn.ReLU(true)(b4)
 
@@ -165,34 +176,22 @@ if opt.network == '' then
   b6 = nn.SpatialBatchNormalization(nplanes * 4)(h6) 
   r6 = nn.LeakyReLU(0.2, true)(b6)
 
-  h7 = nn.SpatialConvolution(nplanes*4, nplanes * 2, 3, 3, 1, 1, 1, 1)(r6)  -- same size
+  h7 = nn.SpatialFullConvolution(nplanes*4, nplanes * 2, 4, 4, 2, 2, 1, 1)(r6) -- size * 2
   b7 = nn.SpatialBatchNormalization(nplanes * 2)(h7) 
   r7 = nn.LeakyReLU(0.2, true)(b7)
   -- u7 = nn.SpatialUpSamplingNearest(2)(r7)  -- size * 2
 
-  h8 = nn.SpatialFullConvolution(nplanes*2, nplanes, 4, 4, 2, 2, 1, 1)(r7)  -- size * 2
+  h8 = nn.SpatialFullConvolution(nplanes*2, nplanes , 4, 4, 2, 2, 1, 1)(r7)  -- size * 2
   b8 = nn.SpatialBatchNormalization(nplanes)(h8)
   r8 = nn.LeakyReLU(0.2, true)(b8)
 
-  h9 = nn.SpatialConvolution(nplanes, 3, 5, 5, 1, 1, 2, 2)(r8) -- same size
+  h9 = nn.SpatialConvolution(nplanes, 3 , 5, 5, 1, 1, 2, 2)(r8) -- same size
 
+  gout = nn.Tanh()(h9)
 
-  tanhout = nn.Tanh()(h9)
-  shff1 = nn.Transpose({2,3},{3,4})(tanhout)
-  rshp  = nn.View(-1, 3)(shff1)
-  normout = nn.Normalize(2)(rshp)
-  rshp2 = nn.View(-1, 72, 72, 3)(normout) 
-  gout = nn.Transpose({4,3},{3,2})(rshp2)
-
-  -- old layer ReArrange implemented by wxl 
-  -- rshp = nn.ReArrange()(tanhout)
-  -- normout = nn.Normalize(2)(rshp)
-  -- gout = nn.ReArrangeBack(72, 72)(normout) 
-
-  model_G = nn.gModule({x_I} , {gout})
+  model_G = nn.gModule({x_I, x_C}, {gout})
 
   model_G:apply(weights_init)
-
 
 else
   print('<trainer> reloading previously trained network: ' .. opt.network)
@@ -203,6 +202,8 @@ end
 
 -- loss function: negative log-likelihood
 criterion = nn.BCECriterion()
+-- 2nd loss function
+criterion2 = nn.MSECriterion()
 
 -- retrieve parameters and gradients
 parameters_D,gradParameters_D = model_D:getParameters()
@@ -215,7 +216,7 @@ print('Generator network:')
 print(model_G)
 
 paths.dofile('data.lua')
-adversarial = paths.dofile('adversarial_ct.lua')
+adversarial = paths.dofile('conditional_adversarial_rgb.lua')
 
 
 -- this matrix records the current confusion across classes
@@ -267,7 +268,10 @@ local function train()
    donkeys:synchronize()
    cutorch.synchronize()
    print(confusion)
-
+   -- tr_acc0 = confusion.valids[1] * 100
+   -- tr_acc1 = confusion.valids[2] * 100
+   -- if tr_acc0 ~= tr_acc0 then tr_acc0 = 0 end
+   -- if tr_acc1 ~= tr_acc1 then tr_acc1 = 0 end
    trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
 
 end
@@ -286,7 +290,7 @@ while true do
       os.execute('mv ' .. filename .. ' ' .. filename .. '.old')
     end
     print('<trainer> saving network to '..filename)
-    torch.save(filename, {D = model_D:clearState(), G = model_G:clearState(), opt = opt})
+    torch.save(filename, {D = sanitize(model_D), G = sanitize(model_G), opt = opt})
   end
 
   epoch = epoch + 1
