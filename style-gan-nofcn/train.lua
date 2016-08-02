@@ -19,7 +19,7 @@ opt = lapp[[
   -n,--network       (default "")          reload pretrained network
   -p,--plot                                plot while training
   -r,--learningRate  (default 0.0002)      learning rate
-  -b,--batchSize     (default 128)         batch size
+  -b,--batchSize     (default 64)         batch size
   -m,--momentum      (default 0.5)         momentum term of adam
   --coefL1           (default 0)           L1 penalty on the weights
   --coefL2           (default 0.00001)     L2 penalty on the weights
