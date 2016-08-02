@@ -57,6 +57,7 @@ end
 model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72/save2/Structure_GAN.net') 
 -- model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal2/save/adversarial_25.net') 
 model_G = model.G
+model_G = model_G:cuda()
 
 opt.noiseDim = {100, 1, 1}
 opt.geometry = {3, opt.scale, opt.scale}
