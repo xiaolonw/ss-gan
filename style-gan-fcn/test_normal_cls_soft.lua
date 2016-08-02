@@ -56,6 +56,7 @@ end
 
 model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_fcn_cls/FCN.net')
 model_FCN = model.FCN
+model_FCN = model_FCN:cuda()
 
 model2 = nn.Sequential()
 model2:add(nn.SoftMax())
