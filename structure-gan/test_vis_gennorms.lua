@@ -50,12 +50,7 @@ else
   torch.setdefaulttensortype('torch.FloatTensor')
 end
 
-
--- model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal3/save/adversarial_15.net') 
--- model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal3_64/save/adversarial_18.net') 
--- model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_64_2/adversarial_9.net') 
 model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72/save2/Structure_GAN.net') 
--- model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal2/save/adversarial_25.net') 
 model_G = model.G
 model_G = model_G:cuda()
 
@@ -66,12 +61,6 @@ opt.condDim = {3, opt.scale, opt.scale}
 opt.div_num = 127.5
 opt.finescale = opt.scale * 2
 
--- trainData = normal3d.loadTrainSet(1, 100)
--- image_utils.simplenorm(trainData.data, opt.div_num, -1)
--- image_utils.simplenorm(trainData.labels, opt.div_num, -1)
-
--- normal3d.setScale(opt.scale)
--- trainData:scaleData()
 
 -- Get examples to plot
 function getSamples(dataset, N, beg)
@@ -113,13 +102,6 @@ end
 for i = 1,10 do 
   getSamples(trainData, 10, (i - 1) * 10 )
 end
-
-
-
--- torch.save('to_plot.t7', to_plot)
-
---disp.image(to_plot, {win=opt.window, width=700, title=opt.save})
-
 
 
 

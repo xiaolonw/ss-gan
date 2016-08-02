@@ -11,9 +11,6 @@ ok, disp = pcall(require, 'display')
 if not ok then print('display not found. unable to plot') end
 
 
-local sanitize = require('sanitize')
-
-
 ----------------------------------------------------------------------
 -- parse command-line options
 opt = lapp[[
@@ -289,7 +286,7 @@ while true do
       os.execute('mv ' .. filename .. ' ' .. filename .. '.old')
     end
     print('<trainer> saving network to '..filename)
-    torch.save(filename, {D = sanitize(model_D), G = sanitize(model_G), opt = opt})
+    torch.save(filename, {D = model_D:clearState(), G = model_G:clearState(), opt = opt})
   end
 
   epoch = epoch + 1
