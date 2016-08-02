@@ -120,7 +120,9 @@ function getSamples(dataset, N, beg)
     local sample = loadImage(filename)
     gt_inputs[n] = sample:clone()
   end   
-  image_utils.simplenorm(gt_inputs, opt.div_num, -1)
+
+  gt_inputs:div(div_num)
+  gt_inputs:add(-1)
 
   model_FCN:forward(gt_inputs)
   local modellist = model_FCN:listModules()
