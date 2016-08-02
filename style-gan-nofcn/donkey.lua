@@ -51,6 +51,7 @@ local function loadImage(path)
 end
 
 local function loadLabel_high(path)
+  print(path)
    local input = image.load(path, 3, 'float')
    input = image.scale(input, opt.loadSize, opt.loadSize )
    input = input * 255
