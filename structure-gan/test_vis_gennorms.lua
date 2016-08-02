@@ -3,15 +3,12 @@ require 'nngraph'
 require 'cunn'
 require 'optim'
 require 'image'
-require 'datasets.scaled_3d_test'
+-- require 'datasets.scaled_3d_test'
 require 'pl'
 require 'paths'
 
-image_utils = require 'utils.image'
 ok, disp = pcall(require, 'display')
 if not ok then print('display not found. unable to plot') end
-adversarial = require 'train.conditional_adversarial_ct'
-require 'layers.SpatialConvolutionUpsample'
 
 opt = lapp[[
   -s,--save          (default "logs")      subdirectory to save logs
