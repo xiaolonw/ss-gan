@@ -136,19 +136,20 @@ function getSamples(dataset, N, beg)
   print(samples:size())
   local norms = torch.Tensor((#samples)[1], 3, (#samples)[3], (#samples)[4])
 
-  for i = 1, (#samples)[1] do 
-    for h = 1, (#samples)[3] do
-      for w = 1, (#samples)[4] do 
-        local nowpixel = torch.reshape(samples[{{i}, {}, {h}, {w}}], opt.classnum)
-        local tnorm = torch.Tensor(3):fill(0)
-        for c = 1, opt.classnum do
-           tnorm = tnorm + codebook[c] * nowpixel[c]
-        end
-        norms[{{i},{},{h},{w}}] = torch.reshape(tnorm:clone(), 3)
+    for i = 1, (#samples)[1] do 
+
+      for c = 1, 3 do 
+        codebook2 = torch.reshape(codebook[{{}, {c}}], opt.classnum ,1,1)
+        codespatial = torch.expand(codebook2, opt.classnum,  (#samples)[3], (#samples)[4])
+
+        nowoutput = torch.reshape( samples[{{i}, {}, {h}, {w}}], opt.classnum, (#samples)[3], (#samples)[4]) 
+        results = torch.cmul(codespatial, nowoutput)
+        results = torch.sum(results, 1):clone()
+        norms[{{i},{c},{},{}}] = results:clone()
 
       end
     end
-  end
+
 
 
   samples = norms:clone()
