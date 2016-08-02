@@ -72,7 +72,7 @@ opt.datasize = 654
 
 
 local list_file = '/nfs/hn46/xiaolonw/cnncode/viewer/testLabels.txt'
-local path_dataset = '/scratch/xiaolonw/croptest/'
+local path_dataset = '/nfs/hn46/xiaolonw/cnncode/viewer/croptest/'
 
 local f = assert(io.open(list_file, "r"))
 
