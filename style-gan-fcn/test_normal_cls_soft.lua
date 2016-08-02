@@ -122,7 +122,7 @@ function getSamples(dataset, N, beg)
     gt_inputs[n] = sample:clone()
   end   
 
-  gt_inputs:div(div_num)
+  gt_inputs:div(opt.div_num)
   gt_inputs:add(-1)
 
   model_FCN:forward(gt_inputs)
