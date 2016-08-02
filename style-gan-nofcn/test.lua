@@ -25,9 +25,8 @@ opt = lapp[[
   -d,--noiseDim      (default 100)         dimensionality of noise vector
   --K                (default 1)           number of iterations to optimize D for
   -w, --window       (default 3)           windsow id of sample image
-  --hidden_G         (default 8000)        number of units in hidden layers of G
-  --hidden_D         (default 1600)        number of units in hidden layers of D
   --scale            (default 128)          scale of images to train on
+  --high             (default 1)           high resolution 
 ]]
 
 if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
