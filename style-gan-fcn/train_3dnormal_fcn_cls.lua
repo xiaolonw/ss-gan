@@ -133,7 +133,7 @@ if opt.network == '' then
   -- rea = nn.ReArrange()(dh8)
 
   shff  = nn.Transpose({2,3},{3,4})(dh8)
-  rshp  = nn.View(-1, 3)(shff)
+  rshp  = nn.View(-1, opt.classnum)(shff)
   dout  = nn.LogSoftMax()(rshp)
 
   model_FCN = nn.gModule({dx_I}, {dout})
@@ -149,8 +149,6 @@ end
 
 -- loss function: negative log-likelihood
 criterion = nn.ClassNLLCriterion()
-
-
 
 
 -- retrieve parameters and gradients
@@ -216,7 +214,7 @@ while true do
       os.execute('mv ' .. filename .. ' ' .. filename .. '.old')
     end
     print('<trainer> saving network to '..filename)
-    torch.save(filename, { FCN = sanitize(model_FCN), opt = opt})
+    torch.save(filename, { FCN = model_FCN:clearState(), opt = opt})
   end
 
   epoch = epoch + 1

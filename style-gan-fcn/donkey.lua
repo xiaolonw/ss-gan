@@ -21,7 +21,7 @@ paths.dofile('dataset.lua')
 -- a cache file of the training metadata (if doesnt exist, will be created)
 local cache = "../cache"
 os.execute('mkdir -p '..cache)
-local trainCache = paths.concat(cache, 'trainCache_lbl.t7')
+local trainCache = paths.concat(cache, 'trainCache_high.t7')
 local testCache = paths.concat(cache, 'testCache.t7')
 local meanstdCache = paths.concat(cache, 'meanstdCache.t7')
 
@@ -84,50 +84,7 @@ function saveData(img, imgname)
   image.save(imgname, img )
 end
 
-
-
-
-
-function makeData(fine, label, classes)
-
-   -- for i = 1, 100 do 
-   -- local fname1 = paths.concat(savepath, string.format('%04d_img.jpg',i ))
-   -- local fname2 = paths.concat(savepath, string.format('%04d_normal.jpg',i ))
-   -- saveData(fine[i], fname1)
-   -- saveData(label[i], fname2)
-   -- end
-
-   local tlabel = torch.Tensor(opt.batchSize, 3, opt.labelSize, opt.labelSize)
-   for i = 1, opt.batchSize do
-    tlabel[i] = image.scale(label[i], opt.labelSize, opt.labelSize)
-   end
-
-   label = tlabel:clone()    
-   local sample_norm = torch.norm(label, 2, 2)
-   sample_norm = torch.cat({sample_norm, sample_norm, sample_norm}, 2)
-   label = torch.cdiv(label, sample_norm)
-
-   if opt.flag == 0 then 
-    for i = 1, opt.batchSize do 
-      local label_name = paths.concat(savepath, string.format('%04d_label.jpg',i ))
-      local img_name = paths.concat(savepath, string.format('%04d_img.jpg',i ))
-      saveData(label[i]:clone(), label_name)
-      saveData(fine[i]:clone(), img_name)
-    end
-   end
-   opt.flag = 1
-
-   return {fine, classes ,label}
-end
-
-
-
-
-
-
-
-
-local codebooktxt = '/nfs/ladoga_no_backups/users/xiaolonw/3dnormal_release/local_model/codebook_40.txt' 
+local codebooktxt = 'codebook_40.txt' 
 local codebook = torch.Tensor(40,3)
 
 if type(opt.classification) == 'number' and opt.classification == 1 then 
@@ -142,15 +99,9 @@ if type(opt.classification) == 'number' and opt.classification == 1 then
 end
 
 
-function makeData_cls(fine, label, classes)
+function makeData_cls(fine, label)
 
-   -- for i = 1, 100 do 
-   -- local fname1 = paths.concat(savepath, string.format('%04d_img.jpg',i ))
-   -- local fname2 = paths.concat(savepath, string.format('%04d_normal.jpg',i ))
-   -- saveData(fine[i], fname1)
-   -- saveData(label[i], fname2)
-   -- end
-
+   local classes = 0 
    local tlabel = torch.Tensor(opt.batchSize, 3, opt.labelSize, opt.labelSize)
    for i = 1, opt.batchSize do
     tlabel[i] = image.scale(label[i], opt.labelSize, opt.labelSize)
@@ -199,9 +150,9 @@ function makeData_cls(fine, label, classes)
 end
 
 
-function makeData_joint(fine, label, classes)
+function makeData_joint(fine, label)
 
-
+   local classes = 0 
    local tlabel = torch.Tensor(opt.batchSize, 3, opt.labelSize, opt.labelSize)
    for i = 1, opt.batchSize do
     tlabel[i] = image.scale(label[i], opt.labelSize, opt.labelSize)
@@ -236,10 +187,9 @@ sub_num = -1
 -- Hooks that are used for each image that is loaded
 
 -- function to load the image, jitter it appropriately (random crops etc.)
-local trainHook = function(self, imgpath, lblpath, lblnum)
+local trainHook = function(self, imgpath, lblpath)
    collectgarbage()
    local img = loadImage(imgpath)
-   -- local label = loadLabel(lblpath)
    local label = loadLabel_high(lblpath)
    img:div(div_num)
    img:add(sub_num)
@@ -247,21 +197,7 @@ local trainHook = function(self, imgpath, lblpath, lblnum)
    label:div(div_num)
    label:add(sub_num)
 
-   return img, label, lblnum
-
-end
-
-local testHook = function(self, imgpath, lblpath, lblnum)
-   collectgarbage()
-   local img = loadImage(imgpath)
-   local label = loadLabel(lblpath)
-   img:div(div_num)
-   img:add(sub_num)
-
-   label:div(div_num)
-   label:add(sub_num)
-
-   return img, label, lblnum
+   return img, label
 
 end
 
@@ -287,26 +223,4 @@ else
 end
 collectgarbage()
 
-
-
--- testLoader
--- if paths.filep(testCache) then
---    print('Loading test metadata from cache')
---    testLoader = torch.load(testCache)
---    testLoader.sampleHookTest = testHook
---    testLoader.loadSize = {3, opt.loadSize, opt.loadSize}
---    testLoader.sampleSize = {3, sampleSize[2], sampleSize[2]}
--- else
---    print('Creating test metadata')
---    testLoader = dataLoader{
---       paths = {paths.concat(opt.data, 'val')},
---       loadSize = {3, loadSize[2], loadSize[2]},
---       sampleSize = {3, sampleSize[2], sampleSize[2]},
---       split = 0,
---       verbose = true
---    }
---    torch.save(testCache, testLoader)
---    testLoader.sampleHookTest = testHook
--- end
--- collectgarbage()
 

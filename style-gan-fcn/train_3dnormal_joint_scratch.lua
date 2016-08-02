@@ -259,7 +259,7 @@ if opt.network == '' then
   fdh8 = nn.SpatialConvolution(512, opt.classnum, 3, 3, 1, 1, 1, 1)(fdr7) 
   
   shff  = nn.Transpose({2,3},{3,4})(fdh8)
-  frshp  = nn.View(-1, 3)(shff)
+  frshp  = nn.View(-1, opt.classnum)(shff)
   fdout = nn.LogSoftMax()(frshp)
 
   model_FCN = nn.gModule({fdx_I}, {fdout})
@@ -375,10 +375,7 @@ local function train()
    donkeys:synchronize()
    cutorch.synchronize()
    print(confusion)
-   -- tr_acc0 = confusion.valids[1] * 100
-   -- tr_acc1 = confusion.valids[2] * 100
-   -- if tr_acc0 ~= tr_acc0 then tr_acc0 = 0 end
-   -- if tr_acc1 ~= tr_acc1 then tr_acc1 = 0 end
+
    trainLogger:add{['% mean class accuracy (train set)'] = confusion.totalValid * 100}
 
 end
@@ -397,7 +394,7 @@ while true do
       os.execute('mv ' .. filename .. ' ' .. filename .. '.old')
     end
     print('<trainer> saving network to '..filename)
-    torch.save(filename, {D = sanitize(model_D), G = sanitize(model_G), FCN = sanitize(model_FCN), opt = opt})
+    torch.save(filename, {D = model_D:clearState(), G = model_G:clearState(), FCN = model_FCN:clearState(), opt = opt})
   end
 
   epoch = epoch + 1
