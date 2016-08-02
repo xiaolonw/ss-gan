@@ -19,7 +19,7 @@ opt = lapp[[
   -n,--network       (default "")          reload pretrained network
   -p,--plot                                plot while training
   -r,--learningRate  (default 0.0002)      learning rate
-  -b,--batchSize     (default 80)         batch size
+  -b,--batchSize     (default 128)         batch size
   -m,--momentum      (default 0.5)         momentum term of adam
   --coefL1           (default 0)           L1 penalty on the weights
   --coefL2           (default 0.00001)     L2 penalty on the weights
@@ -40,7 +40,7 @@ if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
 -- opt.network = '/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/save3/adversarial_6.net'
 
 print(opt)
-opt.flag = 0
+opt.flag = 1
 
 opt.loadSize  = opt.scale 
 
