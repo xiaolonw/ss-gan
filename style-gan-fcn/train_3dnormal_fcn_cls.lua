@@ -3,15 +3,12 @@ require 'nngraph'
 require 'cunn'
 require 'optim'
 require 'image'
--- require 'datasets.scaled_3d'
 require 'pl'
 require 'paths'
 image_utils = require 'image'
 ok, disp = pcall(require, 'display')
 if not ok then print('display not found. unable to plot') end
 
-
-local sanitize = require('sanitize')
 
 
 ----------------------------------------------------------------------
