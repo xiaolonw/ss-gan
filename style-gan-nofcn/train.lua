@@ -36,7 +36,7 @@ opt = lapp[[
   --scratch          (default 0)
   --forceDonkeys     (default 0)
   --nDonkeys         (default 2)           number of data loading threads
-  --classnum         (default 31)          number of classnum
+  --high             (default 1)           high resolution 
 ]]
 
 if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
