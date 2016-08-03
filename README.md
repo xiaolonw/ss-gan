@@ -77,6 +77,7 @@ The code for joint learning is in joint-ssgan:
 ```txt
 	train.lua: joint learning 
 	test.lua: testing S^2-GAN
+	ssgan_models/joint_SSGAN.net is our trained model
 ```
 
 
