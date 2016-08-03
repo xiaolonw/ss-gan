@@ -59,7 +59,8 @@ model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_join
 model_G = model.G
 model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72/save2/Structure_GAN.net')
 model_G1 = model.G
-
+model_G = model_G:cuda()
+model_G1 = model_G1:cuda()
 
 
 opt.noiseDim = {100, 1, 1}
