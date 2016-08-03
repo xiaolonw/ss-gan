@@ -58,8 +58,6 @@ opt.readFCN = 1
 
 
 
-
-
 print(opt)
 
 opt.loadSize  = opt.scale 
