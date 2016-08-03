@@ -43,13 +43,13 @@ opt = lapp[[
 if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
 
 -- strategy 1: opt.pause = 2, opt.readFCN = 1 means read FCN and randomly initialized GAN parameters
-opt.network2 = '/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_fcn_cls/FCN.net'
+opt.network2 = '../ssgan_models/FCN.net'
 opt.pause = 2
 opt.readFCN = 1
 
 -- strategy 2: opt.pause = 0, opt.readFCN = 0 means reading previous trained condition GAN and FCN 
--- opt.network = '/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/bactch60/Style_GAN_nofcn.net'
--- opt.network2 = '/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_fcn_cls/FCN.net'
+-- opt.network = '../ssgan_models/Style_GAN_nofcn.net'
+-- opt.network2 = '../ssgan_models/FCN.net'
 -- opt.pause = 0
 -- opt.readFCN = 0
 
