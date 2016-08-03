@@ -230,7 +230,7 @@ function adversarial.train(inputs_all)
       --  backward pass
       local df_samples = criterion:backward(outputs, targets)
       model_D1:updateGradInput(samples, df_samples)
-      local df_do = model_D.modules[1].gradInput
+      local df_do = model_D1.modules[1].gradInput
       df_do = df_do * opt.lamda
       model_G1:backward(noise_inputs1, df_do)
 
