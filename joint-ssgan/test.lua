@@ -84,7 +84,7 @@ model_upsample:float()
 -- Get examples to plot
 function getSamples(dataset, N, beg)
 
-  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/results7_all2/' 
+  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/joint_all_results/' 
   local N = N or 8
   local noise_inputs = torch.Tensor(N, opt.noiseDim[1], opt.noiseDim[2], opt.noiseDim[3])
   local noise_inputs2 = torch.Tensor(N, opt.noiseDim[1], opt.noiseDim[2], opt.noiseDim[3])
