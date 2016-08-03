@@ -33,8 +33,17 @@ Structure-GAN
 The code for Stucture-GAN is in structure-gan:
 ```txt
 	train.lua: training Stucture-GAN
+	test.lua: testing Stucture-GAN. You can find Structure_GAN.net [here](https://dl.dropboxusercontent.com/u/334666754/ssgan/Structure_GAN.net) as our trained model. 
+```
+
+Style-GAN 
+----
+The code for Style-GAN without FCN constraints is in style-gan-nofcn:
+```txt
+	train.lua: training Stucture-GAN
 	test.lua: testing Stucture-GAN
 ```
+
 
 
 
