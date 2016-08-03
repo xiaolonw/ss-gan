@@ -115,9 +115,17 @@ end
 model_upsample = nn.Sequential()
 model_upsample:add(nn.SpatialReSampling({owidth=128,oheight=128}) )
 
-model_upsample:add(nn.ReArrange())
+
+model_upsample:add(nn.Transpose({2,3},{3,4}))
+model_upsample:add(nn.View(-1, 3))
 model_upsample:add(nn.Normalize(2))
-model_upsample:add(nn.ReArrangeBack(128, 128))
+model_upsample:add(nn.View(-1, 128, 128, 3))
+model_upsample:add(nn.Transpose({4,3},{3,2}))
+
+
+-- model_upsample:add(nn.ReArrange())
+-- model_upsample:add(nn.Normalize(2))
+-- model_upsample:add(nn.ReArrangeBack(128, 128))
 
 
 model_upsample:float()
