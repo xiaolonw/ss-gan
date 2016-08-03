@@ -16,7 +16,7 @@ opt = lapp[[
   -n,--network       (default "")          reload pretrained network
   -p,--plot                                plot while training
   -r,--learningRate  (default 0.02)        learning rate
-  -b,--batchSize     (default 100)         batch size
+  -b,--batchSize     (default 10)         batch size
   -m,--momentum      (default 0)           momentum, for SGD only
   --coefL1           (default 0)           L1 penalty on the weights
   --coefL2           (default 0)           L2 penalty on the weights
