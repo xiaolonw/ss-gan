@@ -102,10 +102,10 @@ if opt.pause == 0 then
   model_D =  tmp3.D
   model_G =  tmp3.G
 else
-  tmp = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_jointall_bi_s4/save_dcgan_normal_72/adversarial_G_1.net')
+  tmp = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_jointall_bi_s4/adversarial_G_1.net')
   model_G1 = tmp.G1
   model_G  = tmp.G
-  tmp2 = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_jointall_bi_s4/save_dcgan_normal_72/adversarial_D_1.net')
+  tmp2 = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_jointall_bi_s4/adversarial_D_1.net')
   model_D1 = tmp2.D1
   model_D  = tmp2.D
   
