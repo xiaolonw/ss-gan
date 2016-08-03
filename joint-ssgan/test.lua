@@ -128,7 +128,7 @@ end
 
 
 
-for i = 1,10 do 
+for i = 1,100 do 
   getSamples(trainData, 10, (i - 1) * 10 )
 end
 
