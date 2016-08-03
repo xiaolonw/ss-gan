@@ -6,7 +6,7 @@ This code is the implementation of training and testing for S^2-GAN for the foll
 
 **Xiaolong Wang** and Abhinav Gupta. Generative Image Modeling using Style and Structure Adversarial Networks. Proc. of European Conference on Computer Vision (ECCV), 2016. [pdf](http://arxiv.org/pdf/1603.05631.pdf)
 
-Citation: 
+BibTeX: 
 ```txt
 @inproceedings{Wang_SSGAN2016,
     Author = {Xiaolong Wang and Abhinav Gupta},
