@@ -30,18 +30,42 @@ For testing, one can download the models into the ssgan_models folder.
 
 Structure-GAN 
 ----
+
 The code for Stucture-GAN is in structure-gan:
 ```txt
 	train.lua: training Stucture-GAN
-	test.lua: testing Stucture-GAN. You can find Structure_GAN.net [here](https://dl.dropboxusercontent.com/u/334666754/ssgan/Structure_GAN.net) as our trained model. 
+	test.lua: testing Stucture-GAN
+	ssgan_models/Structure_GAN.net is our trained model
 ```
 
 Style-GAN 
 ----
+
 The code for Style-GAN without FCN constraints is in style-gan-nofcn:
 ```txt
-	train.lua: training Stucture-GAN
-	test.lua: testing Stucture-GAN
+	train.lua: training Style-GAN
+	test.lua: testing Style-GAN (To run this you need to download the dataset)
+	ssgan_models/Style_GAN_nofcn.net is our trained model
+```
+
+The code for Style-GAN with FCN constraints is in style-gan-fcn:
+```txt
+	train_fcn.lua: training FCN for surface normal estimation
+	test_fcn.lua: testing FCN for surface normal estimation (To run this you need to download the dataset)
+	ssgan_models/FCN.net is our trained model
+
+	train_gan.lua: training Style-GAN
+	test_gan.lua: testing Style-GAN (To run this you need to download the dataset)
+	ssgan_models/joint_Style_GAN.net is our trained model
+```
+
+Joint Learning for S^2-GAN
+----
+
+The code for joint learning is in joint-ssgan:
+```txt
+	train.lua: joint learning 
+	test.lua: testing S^2-GAN
 ```
 
 
