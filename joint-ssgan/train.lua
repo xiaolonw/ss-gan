@@ -180,14 +180,14 @@ adamState_G = {
 }
 
 adamState_D1 = {
-  learningRate = opt.learningRate * 0.001,
+  learningRate = opt.learningRate * 0.1,
   beta1 = opt.momentum,
   optimize = true,
   numUpdates = 0
 }
 
 adamState_G1 = {
-  learningRate = opt.learningRate * 0.001,
+  learningRate = opt.learningRate * 0.1,
   beta1 = opt.momentum,
   optimize = true,
   numUpdates = 0

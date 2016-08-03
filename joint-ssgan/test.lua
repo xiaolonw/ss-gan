@@ -51,16 +51,16 @@ else
 end
 
 
--- model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_jointall_bi_s4/adversarial_G_9.net') 
--- model_G = model.G:cuda()
--- model_G1= model.G1:cuda()
+model = torch.load('../ssgan_models/joint_SSGAN.net') 
+model_G = model.G:cuda()
+model_G1= model.G1:cuda()
 
-model = torch.load('../ssgan_models/joint_Style_GAN.net')
-model_G = model.G
-model = torch.load('../ssgan_models/Structure_GAN.net')
-model_G1 = model.G
-model_G = model_G:cuda()
-model_G1 = model_G1:cuda()
+-- model = torch.load('../ssgan_models/joint_Style_GAN.net')
+-- model_G = model.G
+-- model = torch.load('../ssgan_models/Structure_GAN.net')
+-- model_G1 = model.G
+-- model_G = model_G:cuda()
+-- model_G1 = model_G1:cuda()
 
 
 opt.noiseDim = {100, 1, 1}
