@@ -19,7 +19,7 @@ require 'xlua'
 require 'image'
 
 local dataset = torch.class('dataLoader')
-list_file = '/nfs.yoda/xiaolonw/gan_render/genNormalCodeReg_high/trainlist_rand.txt'
+list_file = '../ssgan_models/trainlist_rand.txt'
 path_dataset = '/scratch/xiaolonw/render_data/'
 -- path_dataset = '/nfs.yoda/xiaolonw/gan_render/data/'
 

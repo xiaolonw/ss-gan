@@ -55,9 +55,9 @@ end
 -- model_G = model.G:cuda()
 -- model_G1= model.G1:cuda()
 
-model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_joint4/save/joint_Style_GAN.net')
+model = torch.load('../ssgan_models/joint_Style_GAN.net')
 model_G = model.G
-model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72/save2/Structure_GAN.net')
+model = torch.load('../ssgan_models/Structure_GAN.net')
 model_G1 = model.G
 model_G = model_G:cuda()
 model_G1 = model_G1:cuda()
@@ -88,7 +88,9 @@ model_upsample:float()
 -- Get examples to plot
 function getSamples(dataset, N, beg)
 
-  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/joint_all_results/' 
+  local resultpath = '../results/joint_all_results/' 
+  os.execute('mkdir -p ' .. resultpath)
+
   local N = N or 8
   local noise_inputs = torch.Tensor(N, opt.noiseDim[1], opt.noiseDim[2], opt.noiseDim[3])
   local noise_inputs2 = torch.Tensor(N, opt.noiseDim[1], opt.noiseDim[2], opt.noiseDim[3])

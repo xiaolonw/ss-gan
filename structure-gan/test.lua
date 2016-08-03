@@ -50,7 +50,7 @@ else
   torch.setdefaulttensortype('torch.FloatTensor')
 end
 
-model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72/adversarial_12.net') 
+model = torch.load('../ssgan_models/Structure_GAN.net') 
 model_G = model.G
 model_G = model_G:cuda()
 
@@ -62,7 +62,8 @@ opt.div_num = 127.5
 -- Get examples to plot
 function getSamples(dataset, N, beg)
 
-  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/test_structure_gan/' 
+  local resultpath = '../results/test_structure_gan/' 
+  os.execute('mkdir -p ' .. resultpath)
   local N = N or 8
   local noise_inputs = torch.Tensor(N, opt.noiseDim[1], opt.noiseDim[2], opt.noiseDim[3])
 

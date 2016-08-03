@@ -47,8 +47,8 @@ opt = lapp[[
 ]]
 
 if opt.gpu < 0 or opt.gpu > 8 then opt.gpu = false end
-opt.network1 = '/nfs.yoda/xiaolonw/torch_projects/models/dcgan_normal_72/save2/Structure_GAN.net'
-opt.network3 = '/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_joint4/save/joint_Style_GAN.net'
+opt.network1 = '../ssgan_models/Structure_GAN.net'
+opt.network3 = '../ssgan_models/joint_Style_GAN.net'
 opt.pause = 0
 print(opt)
 

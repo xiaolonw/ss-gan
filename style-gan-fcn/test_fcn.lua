@@ -55,9 +55,11 @@ end
 
 local list_file = '/nfs/hn46/xiaolonw/cnncode/viewer/testLabels.txt'
 local path_dataset = '/nfs/hn46/xiaolonw/cnncode/viewer/croptest/'
-local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/ssgan_fcn/'
+local resultpath = '../results/ssgan_fcn/' 
+os.execute('mkdir -p ' .. resultpath)
 
-model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_fcn_cls/FCN.net')
+
+model = torch.load('../ssgan_models/FCN.net')
 -- model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_fcn_cls/fcn_5.net')
 model_FCN = model.FCN
 model_FCN = model_FCN:cuda()

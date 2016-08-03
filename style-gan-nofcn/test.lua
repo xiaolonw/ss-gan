@@ -47,7 +47,7 @@ else
   torch.setdefaulttensortype('torch.FloatTensor')
 end
 
-model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_rgb/bactch60/Style_GAN_nofcn.net') 
+model = torch.load('../ssgan_models/Style_GAN_nofcn.net') 
 model_G = model.G
 model_G = model_G:cuda()
 
@@ -64,7 +64,9 @@ paths.dofile('donkey.lua')
 -- Get examples to plot
 function getSamples(dataset, N, beg)
 
-  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/test_style_gan/' 
+
+  local resultpath = '../results/test_style_gan/' 
+  os.execute('mkdir -p ' .. resultpath)
   local N = N or 8
   local noise_inputs = torch.Tensor(N, opt.noiseDim[1], opt.noiseDim[2], opt.noiseDim[3])
   local cond_inputs = torch.Tensor(N, opt.condDim[1], opt.condDim[2], opt.condDim[3])
