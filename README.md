@@ -18,7 +18,6 @@ The list of training files [dropbox](https://dl.dropboxusercontent.com/u/3346667
 General Instructions for using the code
 ----
 
-We seperate 
 
 For training, one need to:
 ```txt
