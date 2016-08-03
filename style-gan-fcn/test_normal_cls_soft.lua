@@ -53,6 +53,9 @@ else
 end
 
 
+local list_file = '/nfs/hn46/xiaolonw/cnncode/viewer/testLabels.txt'
+local path_dataset = '/nfs/hn46/xiaolonw/cnncode/viewer/croptest/'
+local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/ssgan_fcn/'
 
 model = torch.load('/nfs.yoda/xiaolonw/torch_projects/models/train_3dnormal_fcn_cls/FCN.net')
 model_FCN = model.FCN
@@ -71,9 +74,6 @@ opt.div_num = 127.5
 opt.finescale = opt.scale * 2
 opt.datasize = 654
 
-
-local list_file = '/nfs/hn46/xiaolonw/cnncode/viewer/testLabels.txt'
-local path_dataset = '/nfs/hn46/xiaolonw/cnncode/viewer/croptest/'
 
 local f = assert(io.open(list_file, "r"))
 
@@ -105,7 +105,6 @@ end
 -- Get examples to plot
 function getSamples(dataset, N, beg)
 
-  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/ssgan_fcn/'
   local N = N or 8
   local gt_inputs = torch.Tensor(N, opt.condDim[1], opt.condDim[2], opt.condDim[3])
   local namelist = {}
