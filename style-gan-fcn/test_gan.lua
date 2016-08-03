@@ -56,6 +56,7 @@ opt.geometry = {3, opt.scale, opt.scale}
 opt.condDim = {3, opt.scale, opt.scale}
 opt.div_num = 127.5
 opt.loadSize = opt.scale 
+opt.labelSize = 32
 
 paths.dofile('donkey.lua')
 
