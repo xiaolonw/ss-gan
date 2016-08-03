@@ -64,7 +64,7 @@ paths.dofile('donkey.lua')
 -- Get examples to plot
 function getSamples(dataset, N, beg)
 
-  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/test_style_gan/' 
+  local resultpath = '/nfs/hn38/users/xiaolonw/dcgan/test_style_gan2/' 
   local N = N or 8
   local noise_inputs = torch.Tensor(N, opt.noiseDim[1], opt.noiseDim[2], opt.noiseDim[3])
   local cond_inputs = torch.Tensor(N, opt.condDim[1], opt.condDim[2], opt.condDim[3])
@@ -72,7 +72,7 @@ function getSamples(dataset, N, beg)
 
   -- Generate samples
   noise_inputs:uniform(-1, 1)
-  batch_data = makeData(trainLoader:get(beg + 1, beg + N))
+  batch_data = makeData_joint(trainLoader:get(beg + 1, beg + N))
 
   gt_inputs:copy(batch_data[1])
   cond_inputs:copy(batch_data[3])
