@@ -23,9 +23,9 @@ Models and Datasets
 
 The trained models can be downloaded from [dropbox](https://www.dropbox.com/sh/zz7v8gfmgjvswxx/AACdZC045j88zHRnGyBIxuj_a?dl=0). 
 
-The pre-processed dataset (NYUv2) including rgb images and TV-denoised Surface Normals in jpgs can be downloaded from [dropbox](https://dl.dropboxusercontent.com/u/334666754/ssgan-dataset/render_data.tar.gz). 
+The pre-processed dataset (NYUv2) including rgb images and TV-denoised Surface Normals in jpgs can be downloaded from [dropbox](https://www.dropbox.com/s/w9otfv397ldgtc4/render_data.tar.gz?dl=0). 
 
-The list of training files [dropbox](https://dl.dropboxusercontent.com/u/334666754/ssgan/trainlist_rand.txt). 
+The list of training files [dropbox](https://www.dropbox.com/s/6uel9sa8chs18mu/trainlist_rand.txt?dl=0). 
 
 General Instructions for using the code
 ----
